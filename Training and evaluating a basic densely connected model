@@ -1,0 +1,18 @@
+ from tensorflow import keras 
+from tensorflow.keras import layers
+ inputs = keras.Input(shape=(sequence_length, raw_data.shape[-1]))
+ x = layers.Flatten()(inputs)
+ x = layers.Dense(16, activation="relu")(x)
+ outputs = layers.Dense(1)(x)
+ model = keras.Model(inputs, outputs)
+ callbacks = [
+    keras.callbacks.ModelCheckpoint("jena_dense.keras",
+   save_best_only=True)
+ ] 
+model.compile(optimizer="rmsprop", loss="mse", metrics=["mae"])
+ history = model.fit(train_dataset,
+            epochs=10,
+            validation_data=val_dataset,
+            callbacks=callbacks)
+ model = keras.models.load_model("jena_dense.keras")
+ print(f"Test MAE: {model.evaluate(test_dataset)[1]:.2f}")
